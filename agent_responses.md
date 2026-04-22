@@ -3,6 +3,7 @@
 ---
 
 User: List the top 3 Billing Countries by Order Total.
+
 Agent:
 The top 3 billing countries by order total are as follows:
 
@@ -22,20 +23,22 @@ execute_sql
 ---
 				
 User:  Show Net Revenue by product category.
+
 Agent:
 It looks like the necessary data to directly calculate the Net Revenue by product category isn't readily available, as I couldn't find relevant columns related to product categories or revenue in the available tables.
 
 Typically, a Net Revenue calculation would require a dataset where we have:
 
-    The product categories.
-    Total sales amount (or revenue).
-    Any deductions that would allow us to determine net revenue (such as returns, discounts, etc.).
+The product categories.
+Total sales amount (or revenue).
+Any deductions that would allow us to determine net revenue (such as returns, discounts, etc.).
 
 Since I couldn't find the exact schema or columns, would you like to provide details on how products and categories are structured in your database, or do you have any specific fields in mind that might help with this analysis? Alternatively, I can assist with any related queries you may have.
 
 ---
 	
 User: Compare Billing vs Shipping Country: how often do they differ? Show mismatches and add Order Total next to those cases
+
 Agent:
 The following are the mismatches between Billing and Shipping Countries along with their corresponding Order Totals:
 Order ID	Billing Country	Shipping Country	Order Total
