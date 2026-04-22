@@ -1,0 +1,75 @@
+name: customers
+description: Customer records with registration date and order history summary.
+datasource: postgres
+table: "customers"
+
+entities:
+  - name: customer
+    type: primary
+    key: customer_id
+
+dimensions:
+  - name: customer_id
+    type: number
+    expr: customer_id
+    description: Unique customer identifier
+
+  - name: is_paying_customer
+    type: boolean
+    expr: is_paying_customer
+    description: Whether the customer is marked as a paying customer
+
+  - name: returning_customer
+    type: boolean
+    expr: returning_customer
+    description: Whether the customer is classified as returning
+
+  - name: date_created
+    type: date
+    expr: "CAST(date_created_utc AS DATE)"
+    description: Customer creation date in UTC
+
+  - name: week_created
+    type: date
+    expr: "date_trunc('week', CAST(date_created_utc AS DATE))"
+    description: Week of customer creation
+
+  - name: month_created
+    type: date
+    expr: "date_trunc('month', CAST(date_created_utc AS DATE))"
+    description: Month of customer creation
+
+measures:
+  - name: customer_count
+    type: count
+    description: Number of customers
+
+  - name: total_completed_orders
+    type: sum
+    expr: completed_orders_count
+    description: Sum of completed orders across customers
+
+  - name: total_orders
+    type: sum
+    expr: total_orders_count
+    description: Sum of all orders across customers
+
+  - name: total_customer_value
+    type: sum
+    expr: total_orders_value
+    description: Sum of historical total order value across customers
+
+  - name: avg_customer_value
+    type: average
+    expr: total_orders_value
+    description: Average historical customer order value
+
+  - name: avg_completed_orders_per_customer
+    type: average
+    expr: completed_orders_count
+    description: Average completed orders per customer
+
+  - name: avg_orders_per_customer
+    type: average
+    expr: total_orders_count
+    description: Average total orders per customer

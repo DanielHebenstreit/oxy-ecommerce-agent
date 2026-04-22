@@ -1,0 +1,5 @@
+name: ecommerce
+description: E-commerce sales analysis across orders and customers, including country comparisons, order totals, customer segments, and order history.
+views:
+  - orders
+  - customers

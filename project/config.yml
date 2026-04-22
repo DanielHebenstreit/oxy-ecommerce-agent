@@ -1,0 +1,22 @@
+databases:
+  - name: postgres
+    type: postgres
+    host_var: POSTGRES_HOST
+    port_var: POSTGRES_PORT
+    user_var: POSTGRES_USER
+    password_var: POSTGRES_PASSWORD
+    database_var: POSTGRES_DATABASE
+
+models:
+  - name: openai-4o-mini
+    vendor: openai
+    model_ref: gpt-4o-mini
+    key_var: OPENAI_API_KEY
+
+a2a:
+  agents:
+    - ref: agents/analyst.agent.yml
+      name: analyst
+
+defaults:
+  database: postgres

@@ -1,0 +1,174 @@
+name: orders
+description: E-commerce orders with status, totals, billing country, shipping country, and timestamps.
+datasource: postgres
+table: "orders"
+
+entities:
+  - name: order
+    type: primary
+    key: order_id
+  - name: customer
+    type: foreign
+    key: customer_id
+
+dimensions:
+  - name: order_id
+    type: number
+    expr: order_id
+    description: Unique order identifier
+
+  - name: customer_id
+    type: number
+    expr: customer_id
+    description: Customer identifier associated with the order
+
+  - name: order_status
+    type: string
+    expr: order_status
+    description: Current order status
+    samples:
+      - pending
+      - processing
+      - completed
+      - cancelled
+      - refunded
+
+  - name: currency
+    type: string
+    expr: currency
+    description: Currency code for the order
+    samples:
+      - USD
+      - EUR
+      - GBP
+
+  - name: created_via
+    type: string
+    expr: created_via
+    description: Channel or mechanism through which the order was created
+
+  - name: is_returning_order
+    type: boolean
+    expr: is_returning_order
+    description: Whether the order was placed by a returning customer
+
+  - name: billing_country
+    type: string
+    expr: billing_country
+    description: Billing country on the order
+
+  - name: shipping_country
+    type: string
+    expr: shipping_country
+    description: Shipping country on the order
+
+  - name: order_total
+    type: number
+    expr: order_total
+    description: Total order value
+
+  - name: total_tax
+    type: number
+    expr: total_tax
+    description: Total tax charged on the order
+
+  - name: discount_total
+    type: number
+    expr: discount_total
+    description: Total discount applied to the order
+
+  - name: shipping_total
+    type: number
+    expr: shipping_total
+    description: Total shipping charge for the order
+
+  - name: country_match_status
+    type: string
+    expr: >-
+      CASE
+        WHEN billing_country = shipping_country THEN 'Match'
+        ELSE 'Mismatch'
+      END
+    description: Whether billing and shipping country are the same
+
+  - name: date_created
+    type: date
+    expr: "CAST(date_created_utc AS DATE)"
+    description: Order creation date in UTC
+
+  - name: week_created
+    type: date
+    expr: "date_trunc('week', CAST(date_created_utc AS DATE))"
+    description: Week of order creation
+
+  - name: month_created
+    type: date
+    expr: "date_trunc('month', CAST(date_created_utc AS DATE))"
+    description: Month of order creation
+
+  - name: year_created
+    type: date
+    expr: "date_trunc('year', CAST(date_created_utc AS DATE))"
+
+  - name: date_paid
+    type: date
+    expr: "CAST(date_paid_gmt AS DATE)"
+    description: Payment date in GMT, if available
+
+  - name: week_paid
+    type: date
+    expr: "date_trunc('week', CAST(date_paid_gmt AS DATE))"
+
+  - name: month_paid
+    type: date
+    expr: "date_trunc('month', CAST(date_paid_gmt AS DATE))"
+
+  - name: year_paid
+    type: date
+    expr: "date_trunc('year', CAST(date_paid_gmt AS DATE))"
+    description: Year of payment
+
+measures:
+  - name: order_count
+    type: count
+    description: Number of orders
+
+  - name: total_order_value
+    type: sum
+    expr: order_total
+    description: Sum of order totals across orders
+
+  - name: avg_order_value
+    type: average
+    expr: order_total
+    description: Average order total
+
+  - name: total_tax_value
+    type: sum
+    expr: total_tax
+    description: Sum of tax amounts across orders
+
+  - name: total_discount_value
+    type: sum
+    expr: discount_total
+    description: Sum of discount amounts across orders
+
+  - name: total_shipping_value
+    type: sum
+    expr: shipping_total
+    description: Sum of shipping charges across orders
+
+  - name: mismatch_order_count
+    type: count
+    expr: "CASE WHEN billing_country <> shipping_country THEN order_id END"
+    description: Number of orders where billing and shipping countries differ
+
+  - name: matched_order_count
+    type: count
+    expr: "CASE WHEN billing_country = shipping_country THEN order_id END"
+    description: Number of orders where billing and shipping countries match
+
+  - name: mismatch_order_value
+    type: sum
+    expr: "CASE WHEN billing_country <> shipping_country THEN order_total END"
+    description: Sum of order totals for orders with billing and shipping country mismatches

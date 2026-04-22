@@ -1,0 +1,12 @@
+.env
+.env.*
+.DS_Store
+oxy.log
+outputs/
+.checkpoint/
+.lancedb/
+generated/
+results/
+.databases/
+.oxy_state/
+*.log
